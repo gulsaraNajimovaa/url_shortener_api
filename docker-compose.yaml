@@ -1,0 +1,46 @@
+version: "1"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: url-shortener-app
+    environment:
+      DB: ${DB}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+    env_file:
+      - .env
+    networks:
+      - url-shortener-network
+    ports:
+      - 6565:6565
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15.1
+    container_name: url-shortener-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB}
+    expose:
+      - '5432'
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    volumes:
+      - url-shortener-pg-data:/var/lib/postgresql/data
+    networks:
+      - url-shortener-network
+    command: -p 5432
+
+volumes:
+  url-shortener-pg-data:
+
+networks:
+  url-shortener-network:
