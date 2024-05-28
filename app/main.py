@@ -40,7 +40,7 @@ async def create_short_url(
         return db_original_url
 
     # check if the url is valid
-    if not re.search(r'^https://optom.app/', original_url):
+    if not re.search(r'^https://example.com/', original_url):
         raise HTTPException(status_code=400, detail="Your provided URL is not valid")
 
     # if there isn't, create one
@@ -54,7 +54,7 @@ async def create_short_url(
     db.commit()
     db.refresh(db_url)
 
-    return "https://optom.app/" + shortened_url
+    return "https://example.com/" + shortened_url
 
 
 # noinspection PyTypeChecker
